@@ -54,5 +54,10 @@ return [
             "url" => "ip",
             "title" => "Validering av IP-adress.",
         ],
+        [
+            "text" => "Dokumentation",
+            "url" => "doc",
+            "title" => "API-Dokumentation",
+        ],
     ],
 ];
