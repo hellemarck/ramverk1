@@ -15,6 +15,8 @@ På sidan [Ip-adresser](http://www.student.bth.se/~mehe19/dbwebb-kurser/ramverk1
 
 <b>Testa</b>
 
+<!-- alt lägg in länkar istället -->
+
 <form action="ipApi/validateIpApi">
     ...ipApi/validateIpApi?ipAdress=
     <input type="submit" name="ipAdress" value="127.0.0.1">

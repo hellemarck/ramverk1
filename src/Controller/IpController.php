@@ -5,13 +5,18 @@ namespace Anax\Controller;
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
 
-use Anax\Controller\IpValidator;
+// use Anax\Controller\IpValidator;
 
-
+/**
+ * Controllerclass for IP validation
+ */
 class IpController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
+    /**
+     * rendering index page for user to type ip address
+     */
     public function indexAction()
     {
         $page = $this->di->get("page");
@@ -23,6 +28,10 @@ class IpController implements ContainerInjectableInterface
         ]);
     }
 
+    /**
+     * ip validation function - ip4/ip6/not valid
+     * for better testing move page rendering out of function
+     */
     public function validateIpAction()
     {
         $page = $this->di->get("page");

@@ -5,11 +5,16 @@ namespace Anax\Controller;
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
 
-
+/**
+ * Controllerclass for the JSON-return of IP validation
+ */
 class IpToJSONController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
+    /**
+     * validation function, returning json response
+     */
     public function validateIpApiAction()
     {
         $ipAdress = $_GET["ipAdress"];

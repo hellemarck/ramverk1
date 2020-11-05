@@ -1,5 +1,4 @@
 <article class="article" style="text-align:center; min-height:300px;">
-    <!-- <? echo $_SERVER['REMOTE_ADDR'] ?> -->
     <h1>Validera IP-adress</h1>
     <p>Ange en IP-adress att kontrollera</p>
     <form method="GET" action="ip/validateIp">
