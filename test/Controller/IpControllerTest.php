@@ -10,20 +10,23 @@ use PHPUnit\Framework\TestCase;
  */
 class IpControllerTest extends TestCase
 {
-    // create variables for testing
-    public $di;
+    // init di container and test variable
+    protected $di;
     public $controllerTest;
 
-    public function setUp()
+    protected function setUp()
     {
-        // global $di;
+        global $di;
 
         // di setup
         $this->di = new DIFactoryConfig();
         $this->di->loadServices(ANAX_INSTALL_PATH . "/config/di");
         $this->di->get("cache")->setPath(ANAX_INSTALL_PATH . "/test/cache");
 
+        $this->di = $di;
+
         // init the test class
+        // mos put this part in every test case
         $this->controllerTest = new IpController();
         $this->controllerTest->setDI($this->di);
     }
