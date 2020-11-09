@@ -4,6 +4,7 @@ namespace Anax\Controller;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
+use Anax\Models\ipValidator;
 
 /**
  * Controllerclass for the JSON-return of IP validation
@@ -13,25 +14,20 @@ class IpToJSONController implements ContainerInjectableInterface
     use ContainerInjectableTrait;
 
     /**
-     * validation function, returning json response
+     * validation of ip address, returning json response
+     * using the model class ipValidator
      */
     public function validateIpApiAction()
     {
         $ipAdress = $_GET["ipAdress"];
 
-        if (filter_var($ipAdress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            $res = "$ipAdress är en giltig IP4-adress.";
-            $domain = "Domänen är: " . gethostbyaddr($ipAdress);
-        } elseif (filter_var($ipAdress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            $res = "$ipAdress är en giltig IP6-adress.";
-            $domain = "Domänen är: " . gethostbyaddr($ipAdress);
-        } else {
-            $res = "Ip-adressen $ipAdress är inte giltig";
-        }
+        $validator = new ipValidator();
+        $data = $validator->validateIp($ipAdress);
 
+        // rendering the result as json
         return [[
-            "valid" => $res,
-            "domain" => $domain ?? null
+            "valid" => $data["res"],
+            "domain" => $data["domain"] ?? null
         ]];
     }
 }

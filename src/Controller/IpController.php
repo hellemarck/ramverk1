@@ -4,6 +4,7 @@ namespace Anax\Controller;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
+use Anax\Models\ipValidator;
 
 // use Anax\Controller\IpValidator;
 
@@ -21,15 +22,16 @@ class IpController implements ContainerInjectableInterface
     {
         $page = $this->di->get("page");
         $title = "Validera IP-adress";
+        $userIP = [$_SERVER['REMOTE_ADDR']];
 
-        $page->add("ip/index");
+        $page->add("ip/index", $userIP);
         return $page->render([
             "title" => $title,
         ]);
     }
 
     /**
-     * ip validation function - ip4/ip6/not valid
+     * ip validation function - using the model ipValidator
      * for better testing move page rendering out of function
      */
     public function validateIpAction()
@@ -37,23 +39,12 @@ class IpController implements ContainerInjectableInterface
         $page = $this->di->get("page");
         $ipAdress = $_GET["ipAdress"];
 
-        if (filter_var($ipAdress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            $res = "$ipAdress är en giltig IP4-adress.";
-            $domain = "Domänen är: " . gethostbyaddr($ipAdress);
-        } elseif (filter_var($ipAdress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            $res = "$ipAdress är en giltig IP6-adress.";
-            $domain = "Domänen är: " . gethostbyaddr($ipAdress);
-        } else {
-            $res = "Ip-adressen $ipAdress är inte giltig";
-        }
-
-        $data = [
-            "res" => $res,
-            "domain" => $domain ?? null
-        ];
+        $validator = new ipValidator();
+        $data = $validator->validateIp($ipAdress);
 
         $title = "Resultat";
         $page->add("ip/result", $data);
+
         return $page->render([
             "title" => $title,
         ]);
