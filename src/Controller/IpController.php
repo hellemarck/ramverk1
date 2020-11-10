@@ -5,6 +5,8 @@ namespace Anax\Controller;
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
 use Anax\Models\ipValidator;
+use Anax\Models\geoApi;
+
 
 // use Anax\Controller\IpValidator;
 
@@ -41,6 +43,15 @@ class IpController implements ContainerInjectableInterface
 
         $validator = new ipValidator();
         $data = $validator->validateIp($ipAdress);
+
+        $location = new geoApi();
+        $data2 = $location->findGeoLocation($ipAdress);
+
+        // SHOULD WORK??
+        // $data = [
+        //     "ipValidate" => $validator->validateIp($ipAdress);
+        //     "geoLocation" => $location->findGeoLocation($ipAdress);
+        // ]
 
         $title = "Resultat";
         $page->add("ip/result", $data);
