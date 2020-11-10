@@ -31,10 +31,10 @@ class geoApi extends ipValidator
         $result = json_decode($json, true);
 
         return $data = [
-            "city" => $result['city'] ?? null,
-            "country_name" => $result['country_name'] ?? null,
-            "longitude" => $result['longitude'] ?? null,
-            "latitude" => $result['latitude'] ?? null
+            "city" => $result['city'] ?? "-",
+            "country_name" => $result['country_name'] ?? "-",
+            "longitude" => $result['longitude'] ?? "-",
+            "latitude" => $result['latitude'] ?? "-"
         ];
     }
 }

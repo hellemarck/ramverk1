@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant&family=Meddon&family=Source+Code+Pro:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant&family=Assistant&family=Inria+Serif&family=Meddon&family=Source+Code+Pro:wght@300&display=swap');
 
 
 /*!
@@ -21,7 +21,7 @@
 
 body {
     background-color: white;
-    font-family: "Cormorant";
+    font-family: "Assistant";
     font-size: 16px;
 }
 
@@ -63,6 +63,14 @@ h1, h2, h3, h4 {
 .figure .right img {
     border-radius: 50%;
 }
+
+/* .article div .resultIp {
+    background-color: #ececec;
+    width: 500px;
+    margin:40px auto;
+    padding:30px;
+    border:1px solid #888;
+} */
 
 .outer-wrap-footer {
     background-color: #e0d4d8;

@@ -41,11 +41,20 @@ class IpController implements ContainerInjectableInterface
         $page = $this->di->get("page");
         $ipAdress = $_GET["ipAdress"];
 
-        $validator = new ipValidator();
-        $data = $validator->validateIp($ipAdress);
+        // $validator = new ipValidator();
+        // $data = $validator->validateIp($ipAdress);
+        //
+        // $location = new geoApi();
+        // $data2 = $location->findGeoLocation($ipAdress);
 
+        $validator = new ipValidator();
         $location = new geoApi();
-        $data2 = $location->findGeoLocation($ipAdress);
+
+        $data = [
+            "valid" => $validator->validateIp($ipAdress)["res"],
+            "domain" => $validator->validateIp($ipAdress)["domain"] ?? null,
+            "location" => $location->findGeoLocation($ipAdress) ?? null
+        ];
 
         // SHOULD WORK??
         // $data = [
