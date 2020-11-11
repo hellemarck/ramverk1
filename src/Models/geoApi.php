@@ -2,15 +2,14 @@
 
 namespace Anax\Models;
 
-
-class geoApi extends ipValidator
+class GeoApi extends IpValidator
 {
     /**
      * model class for finding coordinates matching the ip adress
-     * used by IpController and IpToJSONController
      * using the geolocation api 'ipstack'
+     * child class to IpValidator
      */
-    public function findGeoLocation($ip)
+    public function findGeoLocation($ipAdress)
     {
         global $di;
 
@@ -19,10 +18,10 @@ class geoApi extends ipValidator
         $apiKey = $config["config"]["ipStack"]["apiKey"];
 
         // make curl api call with ip address and api key
-        $ch = curl_init('http://api.ipstack.com/'.$ip.'?access_key='.$apiKey.'');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $json = curl_exec($ch);
-        curl_close($ch);
+        $ch1 = curl_init('http://api.ipstack.com/'.$ipAdress.'?access_key='.$apiKey.'');
+        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+        $json = curl_exec($ch1);
+        curl_close($ch1);
 
         /**
          * decode the json result
@@ -30,11 +29,13 @@ class geoApi extends ipValidator
          */
         $result = json_decode($json, true);
 
-        return $data = [
+        $data = [
             "city" => $result['city'] ?? "-",
             "country_name" => $result['country_name'] ?? "-",
             "longitude" => $result['longitude'] ?? "-",
             "latitude" => $result['latitude'] ?? "-"
         ];
+
+        return $data;
     }
 }

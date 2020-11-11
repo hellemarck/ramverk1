@@ -4,11 +4,9 @@ namespace Anax\Controller;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-use Anax\Models\ipValidator;
-use Anax\Models\geoApi;
-
-
-// use Anax\Controller\IpValidator;
+use Anax\Models\IpValidator;
+use Anax\Models\GeoApi;
+use Anax\Models\CurrentIp;
 
 /**
  * Controllerclass for IP validation
@@ -19,12 +17,15 @@ class IpController implements ContainerInjectableInterface
 
     /**
      * rendering index page for user to type ip address
+     * with current ip as default value
      */
     public function indexAction()
     {
         $page = $this->di->get("page");
         $title = "Validera IP-adress";
-        $userIP = [$_SERVER['REMOTE_ADDR']];
+
+        $currIp = new CurrentIp();
+        $userIP = $currIp->findIp();
 
         $page->add("ip/index", $userIP);
         return $page->render([
@@ -33,7 +34,7 @@ class IpController implements ContainerInjectableInterface
     }
 
     /**
-     * ip validation function - using the model ipValidator
+     * ip validation function - using the model ipValidator and geoApi
      * for better testing move page rendering out of function
      */
     public function validateIpAction()
@@ -41,26 +42,17 @@ class IpController implements ContainerInjectableInterface
         $page = $this->di->get("page");
         $ipAdress = $_GET["ipAdress"];
 
-        // $validator = new ipValidator();
-        // $data = $validator->validateIp($ipAdress);
-        //
-        // $location = new geoApi();
-        // $data2 = $location->findGeoLocation($ipAdress);
-
-        $validator = new ipValidator();
-        $location = new geoApi();
+        /**
+         * Create an instance of class GeoApi which inherits from IpValidator
+         * Validates IP address in parent class and finds location in child class
+         */
+        $ipAndLocation = new GeoApi();
 
         $data = [
-            "valid" => $validator->validateIp($ipAdress)["res"],
-            "domain" => $validator->validateIp($ipAdress)["domain"] ?? null,
-            "location" => $location->findGeoLocation($ipAdress) ?? null
+            "valid" => $ipAndLocation->validateIp($ipAdress)["res"],
+            "domain" => $ipAndLocation->validateIp($ipAdress)["domain"] ?? null,
+            "location" => $ipAndLocation->findGeoLocation($ipAdress) ?? null
         ];
-
-        // SHOULD WORK??
-        // $data = [
-        //     "ipValidate" => $validator->validateIp($ipAdress);
-        //     "geoLocation" => $location->findGeoLocation($ipAdress);
-        // ]
 
         $title = "Resultat";
         $page->add("ip/result", $data);

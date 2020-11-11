@@ -4,8 +4,8 @@ namespace Anax\Controller;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-use Anax\Models\ipValidator;
-use Anax\Models\geoApi;
+use Anax\Models\IpValidator;
+use Anax\Models\GeoApi;
 
 /**
  * Controllerclass for the JSON-return of IP validation
@@ -16,24 +16,23 @@ class IpToJSONController implements ContainerInjectableInterface
 
     /**
      * validation of ip address and finding location based on ip
-     * using the api models ipValidator and geoApi
+     * using the api model classes IpValidator and GeoApi
      */
     public function validateIpApiAction()
     {
         $ipAdress = $_GET["ipAdress"];
 
-        $validator = new ipValidator();
-        $location = new geoApi();
+        // create instance of class GeoApi which inherits from IpValidator
+        $ipAndLocation = new GeoApi();
 
         $data = [
-            "valid" => $validator->validateIp($ipAdress)["res"],
-            "domain" => $validator->validateIp($ipAdress)["domain"] ?? null,
-            "location" => $location->findGeoLocation($ipAdress) ?? null
+            "valid" => $ipAndLocation->validateIp($ipAdress)["res"],
+            "domain" => $ipAndLocation->validateIp($ipAdress)["domain"] ?? null,
+            "location" => $ipAndLocation->findGeoLocation($ipAdress) ?? null
         ];
 
-        json_encode($data, true);
-
         // rendering the result as formatted json
+        json_encode($data, true);
         return [[ $data ]];
     }
 }

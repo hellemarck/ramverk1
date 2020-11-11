@@ -49,6 +49,7 @@ class IpControllerTest extends TestCase
         // $req = $this->di->get("request");
         $_GET["ipAdress"] = "127.0.0.1";
         $res = $this->controllerTest->validateIpAction();
+        // var_dump($res->getBody());
         $this->assertIsObject($res);
 
         // test ip6

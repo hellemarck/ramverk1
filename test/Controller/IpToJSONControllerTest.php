@@ -48,13 +48,14 @@ class IpToJSONControllerTest extends TestCase
         // test ip not valid
         $_GET["ipAdress"] = "1.2.0";
         $res = $this->apiControllerTest->validateIpApiAction();
-        $this->assertEquals("Ip-adressen 1.2.0 är inte giltig", $res[0]["valid"]);
-        $this->assertEquals(null, $res[0]["domain"]);
+
+        $this->assertEquals("Ip-adressen 1.2.0 är inte giltig", $res[0][0]["valid"]); // << valid undefined
+        $this->assertEquals(null, $res[0][0]["domain"]);
 
         // test ip6
         $_GET["ipAdress"] = "::1";
         $res = $this->apiControllerTest->validateIpApiAction();
         // var_dump($res[0]["domain"]);
-        $this->assertEquals("Domänen är: localhost", $res[0]["domain"]);
+        $this->assertEquals("Domänen är: localhost", $res[0][0]["domain"]);
     }
 }
