@@ -13,17 +13,20 @@ class WheatherApi extends GeoApi
     public function __construct()
     {
         $this->forecast = [];
+        $this->coordinates = [];
     }
 
     public function checkArgument($search)
     {
         if (strpos($search, ",") == true) {
             $split = explode(",", $search);
+            $this->coordinates = [$split[0], $split[1]];
             return $this->comingWheather($split[0], $split[1]);
         } else {
             // if ip-address: find coordinates in GeoApi model
             $res = $this->findGeoLocation($search);
             if ($res["longitude"] !== "-") {
+                $this->coordinates = [$res["latitude"], $res["longitude"]];
                 return $this->comingWheather($res["latitude"], $res["longitude"]);
             } else {
                 return "Felaktig söksträng, försök igen.";
@@ -63,6 +66,12 @@ class WheatherApi extends GeoApi
         } else {
             $this->forecast = "Ogiltiga koordinater, försök igen.";
         }
+        // var_dump($this->coordinates);
+        // return [$this->forecast, $this->coordinates];
         return $this->forecast;
+    }
+
+    public function getCoordinates() {
+        return $this->coordinates;
     }
 }

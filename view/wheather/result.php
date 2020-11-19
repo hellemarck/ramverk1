@@ -1,3 +1,7 @@
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css">
+<script src='https://unpkg.com/leaflet@1.3.3/dist/leaflet.js'></script>
+
+
 <article class="article" style="text-align:center; min-height:300px;">
     <div style="
         background-color:#ececec;
@@ -6,9 +10,27 @@
         padding:20px;
         border:1px solid #888;
     ">
-        <h1 class="heading">7-dagarsprognos för x</h1>
+        <h1 class="heading">7-dagarsprognos</h1>
         <div style="width:500px;margin: 0 auto;text-align:center;">
 <?php
+
+// IF COORDINATES ARE FOUND - DRAW MAP
+// code in map/map.php to reuse
+
+if ($data["coordinates"]) {
+    ?>
+    <div id="map" style="height: 440px; border: 1px solid #AAA;"></div>
+
+    <script>
+        let latitude = <?= $data["coordinates"][0] ?>;
+        let longitude = <?= $data["coordinates"][1] ?>;
+    </script>
+
+    <?php require 'map/map.php';
+}
+
+// SHOW FORECAST OR ERROR MSG
+
 if (is_string($data["forecast"])) {
     ?><p><?= $data["forecast"] ?></p>
 <?php } else {

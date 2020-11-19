@@ -47,7 +47,8 @@ class WheatherController implements ContainerInjectableInterface
         $forecast = $wheatherObj->checkArgument($search);
 
         $data = [
-            "forecast" => $forecast ?? null
+            "forecast" => $forecast ?? null,
+            "coordinates" => $wheatherObj->getCoordinates() ?? null
         ];
 
         $title = "Resultat";
