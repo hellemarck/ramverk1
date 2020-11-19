@@ -14,7 +14,7 @@ class GeoApi extends IpValidator
         global $di;
 
         // get the secret api key
-        $config = $di->get("configuration")->load("geo_api.php");
+        $config = $di->get("configuration")->load("api_keys.php");
         $apiKey = $config["config"]["ipStack"]["apiKey"];
 
         // make curl api call with ip address and api key
