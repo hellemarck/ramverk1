@@ -4,7 +4,6 @@ namespace Anax\Controller;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-// use Anax\Models\IpValidator;
 use Anax\Models\GeoApi;
 use Anax\Models\CurrentIp;
 use Anax\Models\WeatherApi;
@@ -25,8 +24,7 @@ class WeatherController implements ContainerInjectableInterface
         $page = $this->di->get("page");
         $title = "Väderprognoser";
 
-        $currIp = new CurrentIp();
-        $userIP = $currIp->findIp();
+        $userIP = $this->di->get("currentip");
 
         $page->add("weather/index", $userIP);
         return $page->render([
@@ -35,15 +33,16 @@ class WeatherController implements ContainerInjectableInterface
     }
 
     /**
-     * 7 day weather forecast - using the models WeatherAPI and GeoApi
+     * 7 day weather forecast - using the model WeatherAPI
      * takes user input as "search" and sends it to model, returns to view
      */
     public function searchAction()
     {
         $page = $this->di->get("page");
         $search = $_GET["location"];
+        $search = str_replace(' ', '', $search);
 
-        $weatherObj = new WeatherApi();
+        $weatherObj = $this->di->get("weatherapi");
         $forecast = $weatherObj->checkArgument($search);
 
         $data = [

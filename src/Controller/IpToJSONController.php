@@ -23,7 +23,7 @@ class IpToJSONController implements ContainerInjectableInterface
         $ipAdress = $_GET["ipAdress"];
 
         // create instance of class GeoApi which inherits from IpValidator
-        $ipAndLocation = new GeoApi();
+        $ipAndLocation = $this->di->get("geoapi");
 
         $data = [
             "valid" => $ipAndLocation->validateIp($ipAdress)["res"],

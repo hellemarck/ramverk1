@@ -24,8 +24,7 @@ class IpController implements ContainerInjectableInterface
         $page = $this->di->get("page");
         $title = "Validera IP-adress";
 
-        $currIp = new CurrentIp();
-        $userIP = $currIp->findIp();
+        $userIP = $this->di->get("currentip");
 
         $page->add("ip/index", $userIP);
         return $page->render([
@@ -46,7 +45,7 @@ class IpController implements ContainerInjectableInterface
          * Create an instance of class GeoApi which inherits from IpValidator
          * Validates IP address in parent class and finds location in child class
          */
-        $ipAndLocation = new GeoApi();
+        $ipAndLocation = $this->di->get("geoapi");
 
         $data = [
             "valid" => $ipAndLocation->validateIp($ipAdress)["res"],

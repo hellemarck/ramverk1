@@ -1,6 +1,5 @@
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css">
 <script src='https://unpkg.com/leaflet@1.3.3/dist/leaflet.js'></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@[VERSION]/dist/L.Control.Locate.min.js" charset="utf-8"></script> -->
 
 <article class="article" style="text-align:center; min-height:300px;">
     <div style="
@@ -14,8 +13,8 @@
         <div style="width:500px;margin: 0 auto;text-align:center;">
 <?php
 
-// IF COORDINATES ARE FOUND - DRAW MAP
-// code in map/map.php to reuse
+// IF LOCATION WERE FOUND - DRAW MAP
+// map code in map/map.php to reuse
 
 if ($data["coordinates"] && $data["location"]) {
     ?>

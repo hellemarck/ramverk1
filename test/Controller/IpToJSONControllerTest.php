@@ -37,7 +37,7 @@ class IpToJSONControllerTest extends TestCase
     public function testValidateIpAction()
     {
         // test ip4
-        $_GET["ipAdress"] = "127.0.0.1";
+        $_GET["location"] = "8.8.8.8";
         $res = $this->apiControllerTest->validateIpApiAction();
         $this->assertIsArray($res);
 

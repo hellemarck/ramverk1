@@ -24,7 +24,7 @@ class WeatherToJSONController implements ContainerInjectableInterface
     {
         $search = $_GET["location"];
 
-        $weatherObj = new WeatherApi();
+        $weatherObj = $this->di->get("weatherapi");
         $forecast = $weatherObj->checkArgument($search);
 
         $data = [

@@ -7,11 +7,15 @@ class WeatherApi extends GeoApi
     /**
      * model class for a 7 day weather forecast for a position
      * using the weather api 'openweather'
-     *
+     * service container in $di
      */
 
-    public function __construct()
+    public function __construct(\Anax\DI\DIFactoryConfig $di, $apiKey, $wApi, $lApi)
     {
+        $this->di = $di;
+        $this->apiKey = $apiKey;
+        $this->weatherApi = $wApi;
+        $this->locationApi = $lApi;
         $this->forecast = [];
         $this->coordinates = [];
         $this->location = [];
@@ -21,8 +25,12 @@ class WeatherApi extends GeoApi
     {
         if (strpos($search, ",") == true) {
             $split = explode(",", $search);
-            $this->coordinates = [$split[0], $split[1]];
-            return $this->comingWeather($split[0], $split[1]);
+            if (!ctype_alpha($split[0]) && !ctype_alpha($split[1])) {
+                $this->coordinates = [$split[0], $split[1]];
+                return $this->comingWeather($split[0], $split[1]);
+            } else {
+                return "Felaktig söksträng, försök igen.";
+            }
         } else {
             // if ip-address: find coordinates in GeoApi model
             $res = $this->findGeoLocation($search);
@@ -38,10 +46,16 @@ class WeatherApi extends GeoApi
     public function getLocation()
     {
         if (!empty($this->coordinates)) {
-            $ch2 = curl_init('https://nominatim.openstreetmap.org/reverse?format=geocodejson&lat='.$this->coordinates[0].'&lon='.$this->coordinates[1].'');
+            // for test cases
+            if (!isset($_SERVER["HTTP_REFERER"])) {
+                $server = "http://google.com";
+            } else {
+                $server = $_SERVER["HTTP_REFERER"];
+            }
 
+            $ch2 = curl_init($this->locationApi.'reverse?format=geocodejson&lat='.$this->coordinates[0].'&lon='.$this->coordinates[1].'');
             curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch2, CURLOPT_REFERER, $_SERVER["HTTP_REFERER"]);
+            curl_setopt($ch2, CURLOPT_REFERER, $server);
 
             $json = curl_exec($ch2);
             curl_close($ch2);
@@ -59,16 +73,11 @@ class WeatherApi extends GeoApi
 
     public function comingWeather($latitude, $longitude)
     {
-        global $di;
-
         if ($latitude < 90 && $latitude > -90 && $longitude < 180 && $longitude > -180) {
-            // get the api key
-            $config = $di->get("configuration")->load("api_keys.php");
-            $apiKey = $config["config"]["openWeather"]["apiKey"];
             $exclude = "current,minutely,hourly,alerts";
 
             // make curl api call with location and api key
-            $ch1 = curl_init('https://api.openweathermap.org/data/2.5/onecall?lat='.$latitude.'&lon='.$longitude.'&cnt={}&exclude='.$exclude.'&units=metric&lang=sv&appid='.$apiKey.'');
+            $ch1 = curl_init($this->weatherApi.'data/2.5/onecall?lat='.$latitude.'&lon='.$longitude.'&cnt={}&exclude='.$exclude.'&units=metric&lang=sv&appid='.$this->apiKey.'');
             curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
 
             $json = curl_exec($ch1);
