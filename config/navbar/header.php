@@ -80,7 +80,7 @@ return [
         ],
         [
             "text" => "Väder",
-            "url" => "wheather",
+            "url" => "weather",
             "title" => "Väderprognoser.",
         ],
         [

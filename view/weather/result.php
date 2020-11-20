@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css">
 <script src='https://unpkg.com/leaflet@1.3.3/dist/leaflet.js'></script>
-
+<!-- <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@[VERSION]/dist/L.Control.Locate.min.js" charset="utf-8"></script> -->
 
 <article class="article" style="text-align:center; min-height:300px;">
     <div style="
@@ -17,8 +17,9 @@
 // IF COORDINATES ARE FOUND - DRAW MAP
 // code in map/map.php to reuse
 
-if ($data["coordinates"]) {
+if ($data["coordinates"] && $data["location"]) {
     ?>
+    <p><b>Plats:</b> <?= $data["location"][0] ?>, <?= $data["location"][1] ?></p>
     <div id="map" style="height: 440px; border: 1px solid #AAA;"></div>
 
     <script>
@@ -38,8 +39,8 @@ if (is_string($data["forecast"])) {
          <p><b><?= $day["date"]; ?></b> - <?= $day["description"]; ?>, temperatur mellan <?= $day["temp"]; ?> °C.</p>
     <?php }
 }?>
-
-    <a href="http://www.student.bth.se/~mehe19/dbwebb-kurser/ramverk1/me/redovisa/htdocs/wheather" style="
+    <br>
+    <a href="http://www.student.bth.se/~mehe19/dbwebb-kurser/ramverk1/me/redovisa/htdocs/weather" style="
         color:#666;
         background-color:white;
         padding:10px;

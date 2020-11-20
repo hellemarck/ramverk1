@@ -3,7 +3,7 @@
 /**
  * EXAMPLE: config-file for api-keys
  * ipstack (geolocation)
- * openwheather (wheather)
+ * openweather (weather)
  *
  * USAGE -------------------------
  * change the apiKey to your personal one
@@ -14,7 +14,7 @@ return [
     "ipStack" => [
         "apiKey" => "xxxxxxxxxxxxxxxxxx"
     ],
-    "openWheather" => [
+    "openWeather" => [
         "apiKey" => "xxxxxxxxxxxxxxxxxx"
     ]
 ];

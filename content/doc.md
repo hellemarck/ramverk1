@@ -24,3 +24,23 @@ På sidan [Ip-adresser](http://www.student.bth.se/~mehe19/dbwebb-kurser/ramverk1
     <input type="submit" name="ipAdress" value="193.150.214.141" style="background-color:#62c25d;">
     <input type="submit" name="ipAdress" value="1.2.3" style="background-color:#f76765;"><br>
 </form>
+<br>
+
+### 7-dagars väderprognos för geografisk position
+
+På sidan [Väder](http://www.student.bth.se/~mehe19/dbwebb-kurser/ramverk1/me/redovisa/htdocs/weather) kan du söka på en ip-adress eller koordinater för att få fram en väderprognos och karta över platsen. För att få samma data-resultat i JSON-format anropar du REST-API:t i URL:en på följande vis:
+
+<b>Exempel 1 </b>(sökning på ip-adressen 8.8.8.8 - Mountain View)<br>
+...htdocs/weatherApi/search?location=8.8.8.8<br><br>
+<b>Exempel 2 </b>(sökning på koordinaterna 59.40,13.51 - Karlstad)<br>
+...htdocs/weatherApi/search?location=59.40,13.51<br>
+
+
+<b>Testa</b>
+
+<form action="weatherApi/search">
+    ...weatherApi/search?location=
+    <input type="submit" name="location" value="8.8.8.8" style="background-color:#62c25d;">
+    <input type="submit" name="location" value="59.40,13.51" style="background-color:#62c25d;">
+    <input type="submit" name="location" value="1.2.3" style="background-color:#f76765;"><br>
+</form>

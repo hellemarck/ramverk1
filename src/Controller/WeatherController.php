@@ -7,12 +7,12 @@ use Anax\Commons\ContainerInjectableTrait;
 // use Anax\Models\IpValidator;
 use Anax\Models\GeoApi;
 use Anax\Models\CurrentIp;
-use Anax\Models\WheatherApi;
+use Anax\Models\WeatherApi;
 
 /**
- * Controllerclass for wheather forecast
+ * Controllerclass for weather forecast
  */
-class WheatherController implements ContainerInjectableInterface
+class WeatherController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
@@ -28,14 +28,14 @@ class WheatherController implements ContainerInjectableInterface
         $currIp = new CurrentIp();
         $userIP = $currIp->findIp();
 
-        $page->add("wheather/index", $userIP);
+        $page->add("weather/index", $userIP);
         return $page->render([
             "title" => $title,
         ]);
     }
 
     /**
-     * 7 day weather forecast - using the models WheatherAPI and GeoApi
+     * 7 day weather forecast - using the models WeatherAPI and GeoApi
      * takes user input as "search" and sends it to model, returns to view
      */
     public function searchAction()
@@ -43,16 +43,17 @@ class WheatherController implements ContainerInjectableInterface
         $page = $this->di->get("page");
         $search = $_GET["location"];
 
-        $wheatherObj = new WheatherApi();
-        $forecast = $wheatherObj->checkArgument($search);
+        $weatherObj = new WeatherApi();
+        $forecast = $weatherObj->checkArgument($search);
 
         $data = [
             "forecast" => $forecast ?? null,
-            "coordinates" => $wheatherObj->getCoordinates() ?? null
+            "coordinates" => $weatherObj->getCoordinates() ?? null,
+            "location" => $weatherObj->getLocation() ?? null
         ];
 
         $title = "Resultat";
-        $page->add("wheather/result", $data);
+        $page->add("weather/result", $data);
 
         return $page->render([
             "title" => $title,
