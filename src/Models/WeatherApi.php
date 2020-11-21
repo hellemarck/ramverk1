@@ -5,7 +5,7 @@ namespace Anax\Models;
 class WeatherApi extends GeoApi
 {
     /**
-     * model class for a 7 day weather forecast for a position
+     * model class for a 7 day weather forecast or 5 days history for a position
      * using the weather api 'openweather'
      * service container in $di
      */
@@ -16,18 +16,19 @@ class WeatherApi extends GeoApi
         $this->apiKey = $apiKey;
         $this->weatherApi = $wApi;
         $this->locationApi = $lApi;
-        $this->forecast = [];
+        $this->weather = [];
         $this->coordinates = [];
         $this->location = [];
     }
 
-    public function checkArgument($search)
+    // check if input is coordinates or ip
+    public function checkArgument($search, $type)
     {
         if (strpos($search, ",") == true) {
             $split = explode(",", $search);
             if (!ctype_alpha($split[0]) && !ctype_alpha($split[1])) {
                 $this->coordinates = [$split[0], $split[1]];
-                return $this->comingWeather($split[0], $split[1]);
+                return $weather = ($type == "coming") ? ($this->comingWeather($split[0], $split[1])) : $this->pastWeather($split[0], $split[1]);
             } else {
                 return "Felaktig söksträng, försök igen.";
             }
@@ -36,17 +37,18 @@ class WeatherApi extends GeoApi
             $res = $this->findGeoLocation($search);
             if ($res["longitude"] !== "-") {
                 $this->coordinates = [$res["latitude"], $res["longitude"]];
-                return $this->comingWeather($res["latitude"], $res["longitude"]);
+                return $weather = ($type == "coming") ? ($this->comingWeather($res["latitude"], $res["longitude"])) : $this->pastWeather($res["latitude"], $res["longitude"]);
             } else {
                 return "Felaktig söksträng, försök igen.";
             }
         }
     }
 
+    // get city and country of location - using nominatim api
     public function getLocation()
     {
         if (!empty($this->coordinates)) {
-            // for test cases
+            // for test cases - no great solution i know
             if (!isset($_SERVER["HTTP_REFERER"])) {
                 $server = "http://google.com";
             } else {
@@ -71,38 +73,102 @@ class WeatherApi extends GeoApi
         }
     }
 
-    public function comingWeather($latitude, $longitude)
+    // check to see if input coordinates are valid, else return err
+    public function validCoordinates($latitude, $longitude)
     {
         if ($latitude < 90 && $latitude > -90 && $longitude < 180 && $longitude > -180) {
+            return true;
+        } else {
+            $this->weather = "Ogiltiga koordinater, försök igen.";
+            $this->coordinates = [];
+        }
+    }
+
+    // get the past five days date in linux format
+    public function pastFive()
+    {
+        $days = [];
+        for ($i = 0; $i > -5; $i--) {
+            $days[] = strtotime("$i days");
+        }
+        return $days;
+    }
+
+    // give controller access to current coordinates
+    public function getCoordinates()
+    {
+        return $this->coordinates;
+    }
+
+    // fetch for 5 days past weather
+    public function pastWeather($latitude, $longitude)
+    {
+        if ($this->validCoordinates($latitude, $longitude)) {
+            $pastFive = $this->pastFive();
+            $fetch = $this->weatherApi.'data/2.5/onecall/timemachine?lat='.$latitude.'&lon='.$longitude.'&lang=sv&units=metric&dt=';
+
+            $mcurl = curl_multi_init();
+            $fiveDays = [];
+            foreach ($pastFive as $day) {
+                $ch3 = curl_init($fetch.$day.'&APPID='.$this->apiKey.'');
+                curl_setopt($ch3, CURLOPT_RETURNTRANSFER, 1);
+                curl_multi_add_handle($mcurl, $ch3);
+                $fiveDays[] = $ch3;
+            }
+
+            $run = null;
+
+            do {
+                curl_multi_exec($mcurl, $run);
+            } while ($run);
+
+            foreach ($fiveDays as $curl) {
+                curl_multi_remove_handle($mcurl, $curl);
+            }
+
+            curl_multi_close($mcurl);
+
+            foreach ($fiveDays as $day) {
+                $output = curl_multi_getcontent($day);
+                $exploded = json_decode($output, true);
+
+                $current = [
+                    "date" => gmdate("Y-m-d", $exploded["current"]["dt"]),
+                    "temp" => $exploded["current"]["temp"],
+                    "description" => $exploded["current"]["weather"][0]["description"]
+                ];
+                $this->weather[] = $current;
+            }
+        }
+        return $this->weather;
+    }
+
+    // fetch for 7 days coming weather
+    public function comingWeather($latitude, $longitude)
+    {
+        if ($this->validCoordinates($latitude, $longitude)) {
             $exclude = "current,minutely,hourly,alerts";
 
-            // make curl api call with location and api key
             $ch1 = curl_init($this->weatherApi.'data/2.5/onecall?lat='.$latitude.'&lon='.$longitude.'&cnt={}&exclude='.$exclude.'&units=metric&lang=sv&appid='.$this->apiKey.'');
+
             curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
 
             $json = curl_exec($ch1);
             curl_close($ch1);
 
             $result = json_decode($json, true);
+
             $sevenDays = $result["daily"];
 
             foreach ($sevenDays as $value) {
                 $current = [
                     "date" => gmdate("Y-m-d", $value["dt"]),
-                    "temp" => $value["temp"]["min"] . " - " . $value["temp"]["max"],
+                    "temp" => "mellan ".$value["temp"]["min"] . " - " . $value["temp"]["max"],
                     "description" => $value["weather"][0]["description"]
                 ];
-                $this->forecast[] = $current;
+                $this->weather[] = $current;
             }
-        } else {
-            $this->forecast = "Ogiltiga koordinater, försök igen.";
-            $this->coordinates = [];
         }
-        return $this->forecast;
-    }
-
-    public function getCoordinates()
-    {
-        return $this->coordinates;
+        return $this->weather;
     }
 }

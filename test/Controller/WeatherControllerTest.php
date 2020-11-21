@@ -46,6 +46,7 @@ class WeatherControllerTest extends TestCase
     public function testSearchWrongAction()
     {
         $_GET["location"] = "hej,hej";
+        $_GET["type"] = "coming";
         $res = $this->weatherTest->searchAction();
         $body = $res->getBody();
         $this->assertContains('Felaktig söksträng', $body);
@@ -54,23 +55,26 @@ class WeatherControllerTest extends TestCase
     public function testSearchWrongIpAction()
     {
         $_GET["location"] = "1.2.3";
+        $_GET["type"] = "coming";
         $res = $this->weatherTest->searchAction();
         $body = $res->getBody();
         $this->assertContains('försök igen', $body);
     }
 
-    public function testSearchCoordAction()
+    public function testSearchComingAction()
     {
         $_GET["location"] = "55.6,13.2";
+        $_GET["type"] = "coming";
         $res = $this->weatherTest->searchAction();
         $body = $res->getBody();
         $this->assertContains('Staffanstorps kommun', $body);
         $this->assertIsObject($res);
     }
 
-    public function testSearchIpAction()
+    public function testSearchPastAction()
     {
         $_GET["location"] = "8.8.8.8";
+        $_GET["type"] = "past";
         $res = $this->weatherTest->searchAction();
         $this->assertIsObject($res);
         $this->assertInstanceOf("Anax\Response\Response", $res);
@@ -79,6 +83,7 @@ class WeatherControllerTest extends TestCase
     public function testSearchWrongCoordAction()
     {
         $_GET["location"] = "444,44";
+        $_GET["type"] = "past";
         $res = $this->weatherTest->searchAction();
         $this->assertIsObject($res);
     }

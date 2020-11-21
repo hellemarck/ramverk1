@@ -9,7 +9,7 @@ use Anax\Models\CurrentIp;
 use Anax\Models\WeatherApi;
 
 /**
- * Controllerclass for weather forecast
+ * Controllerclass for weather forecast and history
  */
 class WeatherController implements ContainerInjectableInterface
 {
@@ -33,20 +33,22 @@ class WeatherController implements ContainerInjectableInterface
     }
 
     /**
-     * 7 day weather forecast - using the model WeatherAPI
+     * 7 day weather forecast / 5 days history - using the model WeatherAPI
      * takes user input as "search" and sends it to model, returns to view
      */
     public function searchAction()
     {
         $page = $this->di->get("page");
         $search = $_GET["location"];
+
+        $type = $this->di->get("request")->getGet("type");
         $search = str_replace(' ', '', $search);
 
         $weatherObj = $this->di->get("weatherapi");
-        $forecast = $weatherObj->checkArgument($search);
+        $weather = $weatherObj->checkArgument($search, $type);
 
         $data = [
-            "forecast" => $forecast ?? null,
+            "weather" => $weather ?? null,
             "coordinates" => $weatherObj->getCoordinates() ?? null,
             "location" => $weatherObj->getLocation() ?? null
         ];

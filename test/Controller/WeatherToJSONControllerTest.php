@@ -43,7 +43,7 @@ class WeatherToJSONControllerTest extends TestCase
         $_GET["location"] = "2.3.4";
         $res = $this->test->searchAction();
         $this->assertIsArray($res);
-        $this->assertEquals($res[0][0]["forecast"], "Felaktig söksträng, försök igen.");
+        $this->assertEquals($res[0][0]["weather"], "Felaktig söksträng, försök igen.");
     }
 
     public function test3SearchAction()

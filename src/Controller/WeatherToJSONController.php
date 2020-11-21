@@ -23,12 +23,13 @@ class WeatherToJSONController implements ContainerInjectableInterface
     public function searchAction()
     {
         $search = $_GET["location"];
+        $type = $this->di->get("request")->getGet("type");
 
         $weatherObj = $this->di->get("weatherapi");
-        $forecast = $weatherObj->checkArgument($search);
+        $weather = $weatherObj->checkArgument($search, $type);
 
         $data = [
-            "forecast" => $forecast ?? null,
+            "weather" => $weather ?? null,
             "coordinates" => $weatherObj->getCoordinates() ?? null,
             "location" => $weatherObj->getLocation() ?? null
         ];

@@ -9,7 +9,7 @@
         padding:20px;
         border:1px solid #888;
     ">
-        <h1 class="heading">7-dagarsprognos</h1>
+        <h1 class="heading">Väderinformation</h1>
         <div style="width:500px;margin: 0 auto;text-align:center;">
 <?php
 
@@ -29,13 +29,13 @@ if ($data["coordinates"] && $data["location"]) {
     <?php require 'map/map.php';
 }
 
-// SHOW FORECAST OR ERROR MSG
+// SHOW FORECAST/HISTORY OR ERROR MSG
 
-if (is_string($data["forecast"])) {
-    ?><p><?= $data["forecast"] ?></p>
+if (is_string($data["weather"])) {
+    ?><p><?= $data["weather"] ?></p>
 <?php } else {
-    foreach ($data["forecast"] as $day) { ?>
-         <p><b><?= $day["date"]; ?></b> - <?= $day["description"]; ?>, temperatur mellan <?= $day["temp"]; ?> °C.</p>
+    foreach ($data["weather"] as $day) { ?>
+         <p><b><?= $day["date"]; ?></b> - <?= $day["description"]; ?>, temperatur <?= $day["temp"]; ?> °C.</p>
     <?php }
 }?>
     <br>
