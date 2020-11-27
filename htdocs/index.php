@@ -16,6 +16,7 @@ require ANAX_INSTALL_PATH . "/vendor/autoload.php";
 $di = new Anax\DI\DIFactoryConfig();
 $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
 
+// SLÅ PÅ DENNA KMOM04 require first - se föreläsning
 // // Add anax/proxy access to $id, if available
 // if (class_exists("\Anax\Proxy\ProxyDIFactory")) {
 //     \Anax\Proxy\ProxyDIFactory::init($di);

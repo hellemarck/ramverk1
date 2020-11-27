@@ -6,8 +6,8 @@
  * openweather (weather)
  *
  * USAGE -------------------------
- * change the apiKey to your personal one
- * change the name of this file to api_keys.php
+ * 1 change apiKey to your personal ones
+ * 2 change the name of this file to api_keys.php
  */
 
 return [
