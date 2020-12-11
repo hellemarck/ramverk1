@@ -64,6 +64,22 @@ h1, h2, h3, h4 {
     border-radius: 50%;
 }
 
+table, th, td {
+    border: 1px solid #e0d4d8;
+    padding: 10px;
+}
+
+td {
+    min-width: 120px;
+    vertical-align: top;
+}
+
+table {
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
 /* .article div .resultIp {
     background-color: #ececec;
     width: 500px;

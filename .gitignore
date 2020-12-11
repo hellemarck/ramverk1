@@ -4,5 +4,6 @@
 memory::
 composer.lock
 .DS_Store
+.anax/
 
 api_keys_real.php

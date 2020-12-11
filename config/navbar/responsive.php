@@ -89,5 +89,10 @@ return [
             "url" => "doc",
             "title" => "API-Dokumentation",
         ],
+        [
+            "text" => "Böcker",
+            "url" => "book",
+            "title" => "Böcker",
+        ],
     ],
 ];
