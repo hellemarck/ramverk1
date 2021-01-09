@@ -103,6 +103,7 @@ class UpdateForm extends FormModel
         $book->author = $this->form->value("author");
         $book->description = $this->form->value("description");
         $book->image = $this->form->value("image");
+        var_dump($book);
         $book->save();
         return true;
     }
